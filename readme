@@ -1,0 +1,63 @@
+Initialize:
+    Parse arguments:
+        num_philos = number_of_philosophers
+        time_to_die = time_to_die
+        time_to_eat = time_to_eat
+        time_to_sleep = time_to_sleep
+        must_eat = number_of_times_each_philosopher_must_eat (if provided)
+
+    Initialize mutexes:
+        for i = 0 to num_philos - 1:
+            pthread_mutex_init(&forks[i], NULL)
+
+    Initialize threads:
+        for i = 0 to num_philos - 1:
+            pthread_create(&philosophers[i], NULL, philosopher_routine, &philosopher_data[i])
+
+Philosopher Routine (id):
+    while true:
+        // Thinking
+        print("Philosopher " + id + " is thinking.")
+
+        // Pick up forks
+        left_fork = id
+        right_fork = (id + 1) % num_philos
+
+        pthread_mutex_lock(&forks[left_fork])
+        print("Philosopher " + id + " picked up fork " + left_fork + " (left).")
+
+        pthread_mutex_lock(&forks[right_fork])
+        print("Philosopher " + id + " picked up fork " + right_fork + " (right).")
+
+        // Eating
+        print("Philosopher " + id + " is eating.")
+        last_meal[id] = get_current_time()
+        sleep(time_to_eat)
+
+        // Put down forks
+        pthread_mutex_unlock(&forks[left_fork])
+        print("Philosopher " + id + " put down fork " + left_fork + " (left).")
+
+        pthread_mutex_unlock(&forks[right_fork])
+        print("Philosopher " + id + " put down fork " + right_fork + " (right).")
+
+        // Sleeping
+        print("Philosopher " + id + " is sleeping.")
+        sleep(time_to_sleep)
+
+Monitor Thread:
+    while true:
+        for i = 0 to num_philos - 1:
+            if get_current_time() - last_meal[i] > time_to_die:
+                print("Philosopher " + i + " died.")
+                exit(0)
+
+        if must_eat is provided:
+            all_philos_eaten = true
+            for i = 0 to num_philos - 1:
+                if meals_eaten[i] < must_eat:
+                    all_philos_eaten = false
+                    break
+            if all_philos_eaten:
+                print("All philosophers have eaten " + must_eat + " times.")
+                exit(0)
