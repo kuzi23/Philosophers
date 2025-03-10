@@ -79,6 +79,7 @@ int msg(char *str, char *detail, int exit_no);
 void *error_null(char *str, char *details, t_table *table);
 void *free_table(t_table *table);
 int error_failure(char *str, char *details, t_table *table);
+void destroy_mutexes(t_table *table);
 
 // parsing.c
 bool is_valid_input(int ac, char **av);
@@ -95,5 +96,12 @@ void    philo_sleep(t_table *table, time_t sleep_time);
 
 //philosophers.c
 void *philosophers(void *data);
+
+//output.c
+void write_outcome(t_table *table);
+void write_status(t_philo *philo, bool reaper_report, t_status status);
+
+//grim_reaper.c
+bool has_simulation_stopped(t_table *table);
 
 #endif

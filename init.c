@@ -18,6 +18,15 @@ static pthread_mutex_t *init_forks(t_table *table)
     return (forks);
 }
 
+/*assign forks: 
+    Assigns two fork ids to each philosopher. Even numbered philosophers
+    get their fork order switched. This is because the order in which 
+    philosophers take their forks matters.abort
+
+    For example with 3 philos:
+        philo #1 (id: 0) will want fork 0 and fork 1
+        philo #2 
+*/
 static void assign_forks(t_philo *philo)
 {
     philo->fork[0] = philo->id;
